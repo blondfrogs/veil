@@ -1592,7 +1592,7 @@ UniValue startprecomputing(const JSONRPCRequest& request)
 
     std::string response = pprecompute->StartPrecomputing();
 
-    return response;
+    return "Precompute started";
 }
 
 UniValue stopprecomputing(const JSONRPCRequest& request)

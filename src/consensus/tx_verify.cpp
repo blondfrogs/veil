@@ -28,7 +28,7 @@
 #include <veil/zerocoin/lrucache.h>
 
 
-std::map<uint256, bool> mapPubcoin;
+std::map<uint256, bool>*  mapPubcoin = new std::map<uint256,bool>();
 
 bool IsFinalTx(const CTransaction &tx, int nBlockHeight, int64_t nBlockTime)
 {
@@ -253,15 +253,15 @@ bool CheckZerocoinMint(const CTxOut& txout, CBigNum& bnValue, CValidationState& 
     bnValue = pubCoin.getValue();
     uint256 hashPubcoin = GetPubCoinHash(bnValue);
 
-    if (!fSkipZerocoinMintIsPrime && !mapPubcoin.count(hashPubcoin)) {
+    if (!fSkipZerocoinMintIsPrime && !mapPubcoin->count(hashPubcoin)) {
         if (!pubCoin.validate())
             return state.DoS(100, error("CheckZerocoinMint() : PubCoin does not validate"));
 
-        mapPubcoin.insert(make_pair(hashPubcoin, true));
+        mapPubcoin->insert(make_pair(hashPubcoin, true));
     }
 
-    if (mapPubcoin.size() > 1000) {
-        mapPubcoin.erase(mapPubcoin.end()--);
+    if (mapPubcoin->size() > 1000) {
+        mapPubcoin->erase(mapPubcoin->end()--);
     }
 
     size--;

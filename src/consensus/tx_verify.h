@@ -19,8 +19,7 @@ class CTransaction;
 class CTxOut;
 class CValidationState;
 class uint256;
-
-static std::map<uint256, bool> mapPubcoin;
+extern std::map<uint256, bool> mapPubcoin;
 
 /** Transaction validation functions */
 

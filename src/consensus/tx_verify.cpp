@@ -27,6 +27,9 @@
 #include <primitives/zerocoin.h>
 #include <veil/zerocoin/lrucache.h>
 
+
+std::map<uint256, bool> mapPubcoin;
+
 bool IsFinalTx(const CTransaction &tx, int nBlockHeight, int64_t nBlockTime)
 {
     if (tx.nLockTime == 0)

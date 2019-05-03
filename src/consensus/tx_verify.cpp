@@ -236,7 +236,8 @@ bool CheckZerocoinSpend(const CTransaction& tx, CValidationState& state)
 }
 
 // Create a lru cache to hold the currently validated pubcoins with a max size of 5000
-CLRUCache<std::string,bool> cacheValidatedPubcoin(5000);
+//CLRUCache<std::string,bool> cacheValidatedPubcoin(5000);
+std::map<uint256, bool> mapPubcoin;
 
 bool CheckZerocoinMint(const CTxOut& txout, CBigNum& bnValue, CValidationState& state, bool fSkipZerocoinMintIsPrime)
 {
@@ -247,12 +248,15 @@ bool CheckZerocoinMint(const CTxOut& txout, CBigNum& bnValue, CValidationState& 
     bnValue = pubCoin.getValue();
     uint256 hashPubcoin = GetPubCoinHash(bnValue);
 
-    if (!fSkipZerocoinMintIsPrime && !cacheValidatedPubcoin.Exists(hashPubcoin.GetHex())) {
+    if (!fSkipZerocoinMintIsPrime && !mapPubcoin.count(hashPubcoin)) {
         if (!pubCoin.validate())
             return state.DoS(100, error("CheckZerocoinMint() : PubCoin does not validate"));
 
-        cacheValidatedPubcoin.Put(hashPubcoin.GetHex(), true);
+        mapPubcoin.insert(make_pair(hashPubcoin, true));
+    }
 
+    if (mapPubcoin.size() > 1000) {
+        mapPubcoin.erase(mapPubcoin.end()--);
     }
 
     return true;

@@ -9,6 +9,8 @@
 
 #include <stdint.h>
 #include <vector>
+#include <map>
+
 
 class CBigNum;
 class CBlockIndex;
@@ -16,6 +18,9 @@ class CCoinsViewCache;
 class CTransaction;
 class CTxOut;
 class CValidationState;
+class uint256;
+
+std::map<uint256, bool> mapPubcoin;
 
 /** Transaction validation functions */
 

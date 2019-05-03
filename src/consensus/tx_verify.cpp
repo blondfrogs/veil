@@ -237,7 +237,6 @@ bool CheckZerocoinSpend(const CTransaction& tx, CValidationState& state)
 
 // Create a lru cache to hold the currently validated pubcoins with a max size of 5000
 //CLRUCache<std::string,bool> cacheValidatedPubcoin(5000);
-std::map<uint256, bool> mapPubcoin;
 int size = 0;
 
 bool CheckZerocoinMint(const CTxOut& txout, CBigNum& bnValue, CValidationState& state, bool fSkipZerocoinMintIsPrime)

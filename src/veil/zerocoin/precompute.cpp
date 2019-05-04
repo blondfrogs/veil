@@ -1,6 +1,14 @@
-// Copyright (c) 2019 The Veil Core developers
-// Distributed under the MIT software license, see the accompanying
-// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+/**
+* @file       precompute.cpp
+*
+* @brief      Precompute zercoins spend proofs.
+*
+* @author     blondfrogs https://github.com/blondfrogs presstab https://github.com/presstab fuzzbawls https://github.com/fuzzbawls,
+* @date       May 2019
+*
+* @copyright  Copyright 2019 The Veil Developers, Copyright 2019 The PIVX Developers
+* @license    This project is released under the MIT license.
+**/
 
 #include <wallet/wallet.h>
 #include "precompute.h"

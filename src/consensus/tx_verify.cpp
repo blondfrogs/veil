@@ -237,15 +237,13 @@ bool CheckZerocoinSpend(const CTransaction& tx, CValidationState& state)
 
 // Create a lru cache to hold the currently validated pubcoins with a max size of 5000
 //CLRUCache<std::string,bool> cacheValidatedPubcoin(5000);
-int size = 0;
 std::set<uint256> setHashes;
 std::list<uint256> listHashes;
 
 
 bool CheckZerocoinMint(const CTxOut& txout, CBigNum& bnValue, CValidationState& state, bool fSkipZerocoinMintIsPrime)
 {
-    size++;
-    LogPrintf("%s: Count %d\n", __func__, size);
+
     libzerocoin::PublicCoin pubCoin(Params().Zerocoin_Params());
     if (!TxOutToPublicCoin(txout, pubCoin))
         return state.DoS(100, error("CheckZerocoinMint(): TxOutToPublicCoin() failed"));
@@ -257,19 +255,26 @@ bool CheckZerocoinMint(const CTxOut& txout, CBigNum& bnValue, CValidationState& 
         if (!pubCoin.validate())
             return state.DoS(100, error("CheckZerocoinMint() : PubCoin does not validate"));
 
-        listHashes.push_front(hashPubcoin);
-        setHashes.insert(hashPubcoin);
+        try {
+            listHashes.push_front(hashPubcoin);
+            setHashes.insert(hashPubcoin);
 
-        if (listHashes.size() > 1000) {
-            auto endit = listHashes.end();
-            endit--;
+            if (listHashes.size() > 2000) {
+                auto endit = listHashes.end();
+                endit--;
 
-            setHashes.erase(*endit);
-            listHashes.pop_back();
+                setHashes.erase(*endit);
+                listHashes.pop_back();
+            }
+        } catch (...) {
+            for (int i = 0; i < 10; i++) {
+                LogPrintf("--------------------FAILED TO CheckZerocoinMint cache-----------------------------------------------------\n");
+            }
+            setHashes.clear();
+            listHashes.clear();
         }
     }
 
-    size--;
     return true;
 }
 

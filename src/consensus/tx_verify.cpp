@@ -243,7 +243,9 @@ std::list<uint256> listHashes;
 
 bool CheckZerocoinMint(const CTxOut& txout, CBigNum& bnValue, CValidationState& state, bool fSkipZerocoinMintIsPrime)
 {
+    std::thread::id this_id = std::this_thread::get_id();
 
+    LogPrintf("%s : %s\n", __func__, this_id);
     libzerocoin::PublicCoin pubCoin(Params().Zerocoin_Params());
     if (!TxOutToPublicCoin(txout, pubCoin))
         return state.DoS(100, error("CheckZerocoinMint(): TxOutToPublicCoin() failed"));

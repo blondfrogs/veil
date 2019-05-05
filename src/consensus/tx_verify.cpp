@@ -247,16 +247,18 @@ bool CheckZerocoinMint(const CTxOut& txout, CBigNum& bnValue, CValidationState& 
 
     bnValue = pubCoin.getValue();
     uint256 hashPubcoin = GetPubCoinHash(bnValue);
+    {
+        TRY_LOCK(cs_check_mint, fLocked);
 
-    if (!fSkipZerocoinMintIsPrime && !cacheValidatedPubcoin.Exists(hashPubcoin.GetHex())) {
-        if (!pubCoin.validate())
-            return state.DoS(100, error("CheckZerocoinMint() : PubCoin does not validate"));
-        {
-            TRY_LOCK(cs_check_mint, fLocked);
+        bool fChecked = false;
+        if (fLocked)
+            fChecked = cacheValidatedPubcoin.Exists(hashPubcoin.GetHex());
 
-            if (fLocked) {
+        if (!fSkipZerocoinMintIsPrime && !fChecked) {
+            if (!pubCoin.validate())
+                return state.DoS(100, error("CheckZerocoinMint() : PubCoin does not validate"));
+            if (fLocked)
                 cacheValidatedPubcoin.Put(hashPubcoin.GetHex(), true);
-            }
         }
     }
 

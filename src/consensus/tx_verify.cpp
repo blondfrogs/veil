@@ -236,16 +236,11 @@ bool CheckZerocoinSpend(const CTransaction& tx, CValidationState& state)
 }
 
 // Create a lru cache to hold the currently validated pubcoins with a max size of 5000
-//CLRUCache<std::string,bool> cacheValidatedPubcoin(5000);
-std::set<uint256> setHashes;
-std::list<uint256> listHashes;
-
+CLRUCache<std::string,bool> cacheValidatedPubcoin(5000);
+CCriticalSection cs_check_mint;
 
 bool CheckZerocoinMint(const CTxOut& txout, CBigNum& bnValue, CValidationState& state, bool fSkipZerocoinMintIsPrime)
 {
-    std::thread::id this_id = std::this_thread::get_id();
-
-    LogPrintf("%s : %s\n", __func__, this_id);
     libzerocoin::PublicCoin pubCoin(Params().Zerocoin_Params());
     if (!TxOutToPublicCoin(txout, pubCoin))
         return state.DoS(100, error("CheckZerocoinMint(): TxOutToPublicCoin() failed"));
@@ -253,27 +248,15 @@ bool CheckZerocoinMint(const CTxOut& txout, CBigNum& bnValue, CValidationState& 
     bnValue = pubCoin.getValue();
     uint256 hashPubcoin = GetPubCoinHash(bnValue);
 
-    if (!fSkipZerocoinMintIsPrime && !setHashes.count(hashPubcoin)) {
+    if (!fSkipZerocoinMintIsPrime && !cacheValidatedPubcoin.Exists(hashPubcoin.GetHex())) {
         if (!pubCoin.validate())
             return state.DoS(100, error("CheckZerocoinMint() : PubCoin does not validate"));
+        {
+            TRY_LOCK(cs_check_mint, fLocked);
 
-        try {
-            listHashes.push_front(hashPubcoin);
-            setHashes.insert(hashPubcoin);
-
-            if (listHashes.size() > 2000) {
-                auto endit = listHashes.end();
-                endit--;
-
-                setHashes.erase(*endit);
-                listHashes.pop_back();
+            if (fLocked) {
+                cacheValidatedPubcoin.Put(hashPubcoin.GetHex(), true);
             }
-        } catch (...) {
-            for (int i = 0; i < 10; i++) {
-                LogPrintf("--------------------FAILED TO CheckZerocoinMint cache-----------------------------------------------------\n");
-            }
-            setHashes.clear();
-            listHashes.clear();
         }
     }
 

@@ -428,7 +428,23 @@ crypto_libbitcoin_crypto_base_a_SOURCES = \
   crypto/external/sha512.c \
   crypto/external/sha512.h \
   crypto/external/zeroize.c \
-  crypto/external/zeroize.h
+  crypto/external/zeroize.h \
+  crypto/progpow/ethash.cpp \
+  crypto/progpow/ethash.hpp\
+  crypto/progpow/keccak.c \
+  crypto/progpow/keccak.hpp \
+  crypto/progpow/primes.h \
+  crypto/progpow/endianness.hpp \
+  crypto/progpow/ethash-internal.hpp \
+  crypto/progpow/keccakf1600.c \
+  crypto/progpow/managed.cpp \
+  crypto/progpow/hash_types.h \
+  crypto/progpow/keccakf800.c \
+  crypto/progpow/math_ops.hpp \
+  crypto/progpow/ethash.h \
+  crypto/progpow/hash_types.hpp \
+  crypto/progpow/keccak.h \
+  crypto/progpow/primes.c
 
 # libzerocoin library
 libzerocoin_libbitcoin_zerocoin_a_CPPFLAGS = $(AM_CPPFLAGS) $(BOOST_CPPFLAGS)

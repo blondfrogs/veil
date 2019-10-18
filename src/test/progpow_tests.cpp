@@ -95,34 +95,71 @@ BOOST_AUTO_TEST_CASE(progpow_hash_and_verify)
 
 BOOST_AUTO_TEST_CASE(progpow_search)
 {
-        auto ctxp = ethash::create_epoch_context_full(0);
-auto& ctx = *ctxp;
-auto& ctxl = reinterpret_cast<const ethash::epoch_context&>(ctx);
+    auto ctxp = ethash::create_epoch_context_full(0);
+    auto& ctx = *ctxp;
+    auto& ctxl = reinterpret_cast<const ethash::epoch_context&>(ctx);
 
-auto boundary = to_hash256("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-auto sr = progpow::search(ctx, 0, {}, boundary, 0, 100);
-auto srl = progpow::search_light(ctxl, 0, {}, boundary, 0, 100);
+    auto boundary = to_hash256("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+    auto sr = progpow::search(ctx, 0, {}, boundary, 0, 100);
+    auto srl = progpow::search_light(ctxl, 0, {}, boundary, 0, 100);
 
-BOOST_CHECK(sr.mix_hash == ethash::hash256{});
-BOOST_CHECK(sr.final_hash == ethash::hash256{});
-BOOST_CHECK(sr.nonce == 0x0);
-BOOST_CHECK(sr.mix_hash == srl.mix_hash);
-BOOST_CHECK(sr.final_hash == srl.final_hash);
-BOOST_CHECK(sr.nonce == srl.nonce);
+    BOOST_CHECK(sr.mix_hash == ethash::hash256{});
+    BOOST_CHECK(sr.final_hash == ethash::hash256{});
+    BOOST_CHECK(sr.nonce == 0x0);
+    BOOST_CHECK(sr.mix_hash == srl.mix_hash);
+    BOOST_CHECK(sr.final_hash == srl.final_hash);
+    BOOST_CHECK(sr.nonce == srl.nonce);
 
-sr = progpow::search(ctx, 0, {}, boundary, 100, 100);
-srl = progpow::search_light(ctxl, 0, {}, boundary, 100, 100);
+    sr = progpow::search(ctx, 0, {}, boundary, 100, 100);
+    srl = progpow::search_light(ctxl, 0, {}, boundary, 100, 100);
 
-BOOST_CHECK(sr.mix_hash != ethash::hash256{});
-BOOST_CHECK(sr.final_hash != ethash::hash256{});
-BOOST_CHECK(sr.nonce == 185);
-BOOST_CHECK(sr.mix_hash == srl.mix_hash);
-BOOST_CHECK(sr.final_hash == srl.final_hash);
-BOOST_CHECK(sr.nonce == srl.nonce);
+    BOOST_CHECK(sr.mix_hash != ethash::hash256{});
+    BOOST_CHECK(sr.final_hash != ethash::hash256{});
+    BOOST_CHECK(sr.nonce == 185);
+    BOOST_CHECK(sr.mix_hash == srl.mix_hash);
+    BOOST_CHECK(sr.final_hash == srl.final_hash);
+    BOOST_CHECK(sr.nonce == srl.nonce);
 
-auto r = progpow::hash(ctx, 0, {}, 185);
-BOOST_CHECK(sr.final_hash == r.final_hash);
-BOOST_CHECK(sr.mix_hash == r.mix_hash);
+    auto r = progpow::hash(ctx, 0, {}, 185);
+    BOOST_CHECK(sr.final_hash == r.final_hash);
+    BOOST_CHECK(sr.mix_hash == r.mix_hash);
+}
+
+BOOST_AUTO_TEST_CASE(progpow_veil_header)
+{
+    CBlockHeader header;
+    header.SetNull();
+    header.nVersion = 0x20000000UL;
+    header.nVersion |= CBlockHeader::PROGPOW_BLOCK;
+    header.hashPrevBlock = uint256S("aabbcceeffaabbcceeffaabbcceeffaabbcceeffaabbcceeffaabbcceeffaabb");
+    header.hashVeilData = uint256S("0011223344556677889900112233445566778899001122334455667788990011");
+    header.nTime = 1571415021;
+    header.nNonce64 = 5813;
+    header.nBits = 0x1e008eb5;
+    header.nHeight = 25000;
+
+    const auto epoch_number = ethash::get_epoch_number(header.nHeight);
+    auto ctxp = ethash::create_epoch_context_full(epoch_number);
+    auto& ctx = *ctxp;
+    auto& ctxl = reinterpret_cast<const ethash::epoch_context&>(ctx);
+
+    uint256 nHeaderHash = header.GetProgPowHeaderHash();
+
+    const auto header_hash = to_hash256(nHeaderHash.GetHex());
+    const auto result = progpow::hash(ctx, header.nHeight, header_hash, header.nNonce64);
+
+    BOOST_CHECK(result.mix_hash == to_hash256("748d92ee99ade05497339617b7be75959236646eeb28208c7f1e8bf948192093"));
+    BOOST_CHECK(result.final_hash == to_hash256("000cc32838296a62cf807faaf2b9ffd6fed87b6381b5cc3bfbeb914f8024afff"));
+
+    auto boundary = to_hash256("000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+    auto sr = progpow::search(ctx, header.nHeight, header_hash, boundary, 5500, 400);
+    BOOST_CHECK(sr.solution_found);
+
+    auto success = progpow::verify(ctxl, header.nHeight, header_hash, result.mix_hash, header.nNonce64, result.final_hash);
+    BOOST_CHECK(success);
+
+    BOOST_CHECK(result.mix_hash == sr.mix_hash);
+    BOOST_CHECK(result.final_hash == sr.final_hash);
 }
 
 

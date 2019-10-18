@@ -138,8 +138,13 @@ public:
 
     uint256 GetHash() const;
     uint256 GetPoWHash() const;
+    uint256 GetProgPowHash() const;
 
     uint256 GetProgPowHeaderHash() const;
+
+    bool IsProgPow() const {
+        return nVersion & PROGPOW_BLOCK;
+    }
 
     int64_t GetBlockTime() const
     {

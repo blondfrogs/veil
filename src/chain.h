@@ -392,6 +392,11 @@ public:
         return GetBlockHeader().GetPoWHash();
     }
 
+    uint256 GetProgPowHash() const
+    {
+        return GetBlockHeader().GetProgPowHash();
+    }
+
     uint256 GetBlockPoSHash() const
     {
         uint256 hash;
@@ -451,6 +456,11 @@ public:
     bool IsProofOfWork() const
     {
         return !fProofOfStake;
+    }
+
+    bool IsProgProofOfWork() const
+    {
+        return !fProofOfStake && mixHash != uint256();
     }
 
     bool IsProofOfStake() const

@@ -21,4 +21,7 @@ unsigned int DarkGravityWave(const CBlockIndex* pindexLast, const Consensus::Par
 /** Check whether a block hash satisfies the proof-of-work requirement specified by nBits */
 bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params&);
 
+/** Check whether a block hash satisfies the prog-proof-of-work requirement specified by nBits */
+bool CheckProgProofOfWork(const CBlockHeader& block, unsigned int nBits, const Consensus::Params&);
+
 #endif // BITCOIN_POW_H

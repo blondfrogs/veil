@@ -460,7 +460,7 @@ public:
 
     bool IsProgProofOfWork() const
     {
-        return !fProofOfStake && mixHash != uint256();
+        return !fProofOfStake && (nVersion & CBlockHeader::PROGPOW_BLOCK);
     }
 
     bool IsProofOfStake() const

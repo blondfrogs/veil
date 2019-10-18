@@ -238,7 +238,7 @@ public:
         return block;
     }
 
-    bool IsProgPow() {
+    bool IsProgPow() const {
         return IsProofOfWork() && (nVersion & PROGPOW_BLOCK);
     }
 

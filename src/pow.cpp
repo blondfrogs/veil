@@ -18,7 +18,7 @@
 #include "crypto/ethash/progpow_test_vectors.hpp"
 
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock,
-                                    const Consensus::Params& params, bool fProofOfStake)
+                                    const Consensus::Params& params, bool fProofOfStake, bool fProgPow)
 {
     assert(pindexLast != nullptr);
 
@@ -43,16 +43,18 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 //    }
 
     // Retarget every block with DarkGravityWave
-    return DarkGravityWave(pindexLast, params, fProofOfStake);
+    return DarkGravityWave(pindexLast, params, fProofOfStake, fProgPow);
 }
 
-unsigned int DarkGravityWave(const CBlockIndex* pindexLast, const Consensus::Params& params, bool fProofOfStake) {
+unsigned int DarkGravityWave(const CBlockIndex* pindexLast, const Consensus::Params& params, bool fProofOfStake, bool fProgPow) {
     /* current difficulty formula, veil - DarkGravity v3, written by Evan Duffield - evan@dash.org */
     const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
 
     const CBlockIndex *pindex = pindexLast;
     const CBlockIndex* pindexLastMatchingProof = nullptr;
     arith_uint256 bnPastTargetAvg = 0;
+    if (fProgPow)
+        LogPrintf("%s, For ProgPow\n", __func__);
 
     unsigned int nCountBlocks = 0;
     while (nCountBlocks < params.nDgwPastBlocks) {
@@ -62,6 +64,9 @@ unsigned int DarkGravityWave(const CBlockIndex* pindexLast, const Consensus::Par
 
         // Only consider PoW or PoS blocks but not both
         if (pindex->IsProofOfStake() != fProofOfStake) {
+            pindex = pindex->pprev;
+            continue;
+        } else if (pindex->IsProgProofOfWork() != fProgPow) {
             pindex = pindex->pprev;
             continue;
         } else if (!pindexLastMatchingProof) {
@@ -81,8 +86,15 @@ unsigned int DarkGravityWave(const CBlockIndex* pindexLast, const Consensus::Par
     if (pindexLastMatchingProof)
         pindexLastMatchingProof = pindexLast;
 
+    int64_t nPowSpacing;
+    if (fProgPow) {
+        nPowSpacing = params.nProgPowTargetSpacing;
+    } else {
+        nPowSpacing = params.nPowTargetSpacing;
+    }
+
     int64_t nActualTimespan = pindexLastMatchingProof->GetBlockTime() - pindex->GetBlockTime();
-    int64_t nTargetTimespan = params.nDgwPastBlocks * params.nPowTargetSpacing;
+    int64_t nTargetTimespan = params.nDgwPastBlocks * nPowSpacing;
 
     if (nActualTimespan < nTargetTimespan/3)
         nActualTimespan = nTargetTimespan/3;

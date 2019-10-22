@@ -452,7 +452,78 @@ crypto_libbitcoin_crypto_base_a_SOURCES = \
   crypto/ethash/lib/keccak/keccakf800.c \
   crypto/ethash/lib/support/attributes.h \
   crypto/ethash/helpers.hpp \
-  crypto/ethash/progpow_test_vectors.hpp
+  crypto/ethash/progpow_test_vectors.hpp \
+  crypto/randomx/aes_hash.cpp \
+  crypto/randomx/aes_hash.hpp \
+  crypto/randomx/allocator.cpp \
+  crypto/randomx/allocator.hpp \
+  crypto/randomx/argon2.h \
+  crypto/randomx/argon2_avx2.c \
+  crypto/randomx/argon2_core.c \
+  crypto/randomx/argon2_core.h \
+  crypto/randomx/argon2_ref.c \
+  crypto/randomx/argon2_ssse3.c \
+  crypto/randomx/assembly_generator_x86.cpp \
+  crypto/randomx/assembly_generator_x86.hpp \
+  crypto/randomx/blake2_generator.cpp \
+  crypto/randomx/blake2_generator.hpp\
+  crypto/randomx/bytecode_machine.cpp \
+  crypto/randomx/bytecode_machine.hpp \
+  crypto/randomx/common.hpp \
+  crypto/randomx/configuration.h \
+  crypto/randomx/cpu.cpp \
+  crypto/randomx/cpu.hpp \
+  crypto/randomx/dataset.cpp \
+  crypto/randomx/dataset.hpp \
+  crypto/randomx/instruction.cpp \
+  crypto/randomx/instruction.hpp \
+  crypto/randomx/instruction_weights.hpp \
+  crypto/randomx/instructions_portable.cpp \
+  crypto/randomx/intrin_portable.h \
+  crypto/randomx/jit_compiler.hpp \
+  crypto/randomx/jit_compiler_fallback.hpp \
+  crypto/randomx/jit_compiler_x86.cpp \
+  crypto/randomx/jit_compiler_x86.hpp \
+  crypto/randomx/jit_compiler_x86_static.asm \
+  crypto/randomx/jit_compiler_x86_static.hpp \
+  crypto/randomx/jit_compiler_x86_static.S \
+  crypto/randomx/program.hpp \
+  crypto/randomx/randomx.cpp \
+  crypto/randomx/randomx.h \
+  crypto/randomx/reciprocal.c \
+  crypto/randomx/reciprocal.h \
+  crypto/randomx/soft_aes.cpp \
+  crypto/randomx/soft_aes.h \
+  crypto/randomx/superscalar.cpp \
+  crypto/randomx/superscalar.hpp \
+  crypto/randomx/superscalar_program.hpp \
+  crypto/randomx/virtual_machine.cpp \
+  crypto/randomx/virtual_machine.hpp \
+  crypto/randomx/virtual_memory.cpp \
+  crypto/randomx/virtual_memory.hpp \
+  crypto/randomx/vm_compiled.cpp \
+  crypto/randomx/vm_compiled.hpp \
+  crypto/randomx/vm_compiled_light.cpp \
+  crypto/randomx/vm_compiled_light.hpp \
+  crypto/randomx/vm_interpreted.cpp \
+  crypto/randomx/vm_interpreted.hpp \
+  crypto/randomx/vm_interpreted_light.cpp \
+  crypto/randomx/vm_interpreted_light.hpp \
+  crypto/randomx/blake2/blake2.h \
+  crypto/randomx/blake2/blake2-impl.h \
+  crypto/randomx/blake2/blake2b.c \
+  crypto/randomx/blake2/blamka-round-avx2.h \
+  crypto/randomx/blake2/blamka-round-ref.h \
+  crypto/randomx/blake2/blamka-round-ssse3.h \
+  crypto/randomx/blake2/endian.h \
+  crypto/randomx/asm/configuration.asm
+
+# these are the arm files that were removed from the make inorder to get the randomx libraries to compile
+#  crypto/randomx/jit_compiler_a64.cpp
+#  crypto/randomx/jit_compiler_a64.hpp
+#  crypto/randomx/jit_compiler_a64_static.hpp
+#  crypto/randomx/jit_compiler_a64_static.S
+
 
 
 # libzerocoin library

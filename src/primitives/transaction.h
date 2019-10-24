@@ -13,7 +13,7 @@
 #include <uint256.h>
 #include <arith_uint256.h>
 
-#include <secp256k1_rangeproof.h>
+#include "secp256k1/include/secp256k1_rangeproof.h"
 
 static const int SERIALIZE_TRANSACTION_NO_WITNESS = 0x40000000;
 

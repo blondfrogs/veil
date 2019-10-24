@@ -7,7 +7,7 @@
 #define BITCOIN_BIGNUM_H
 
 #if defined HAVE_CONFIG_H
-#include "veil-config.h"
+#include "config/veil-config.h"
 #endif
 
 #include <stdexcept>

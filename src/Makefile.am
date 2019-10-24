@@ -350,7 +350,7 @@ libbitcoin_wallet_a_SOURCES = \
   veil/zerocoin/mintpool.cpp \
   veil/zerocoin/precompute.cpp \
   veil/zerocoin/spendreceipt.cpp \
-	veil/zerocoin/witness.cpp \
+  veil/zerocoin/witness.cpp \
   veil/zerocoin/ztracker.cpp \
   veil/zerocoin/zwallet.cpp \
   veil/ringct/temprecipient.cpp \

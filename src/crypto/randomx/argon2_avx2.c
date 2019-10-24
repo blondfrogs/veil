@@ -42,6 +42,13 @@ void randomx_argon2_fill_segment_avx2(const argon2_instance_t* instance,
 	argon2_position_t position);
 
 randomx_argon2_impl* randomx_argon2_impl_avx2() {
+
+#if defined(ENABLE_AVX2)
+    printf("found avx2\n");
+#else
+    printf("not found avx2\n");
+#endif
+
 #if defined(__AVX2__)
 	return &randomx_argon2_fill_segment_avx2;
 #endif
@@ -49,12 +56,13 @@ randomx_argon2_impl* randomx_argon2_impl_avx2() {
 }
 
 #if defined(__AVX2__)
+#include <immintrin.h>
 
-#include "argon2_core.h"
+#include "crypto/randomx/argon2_core.h"
 
-#include "blake2/blamka-round-avx2.h"
-#include "blake2/blake2-impl.h"
-#include "blake2/blake2.h"
+#include "crypto/randomx/blake2/blamka-round-avx2.h"
+#include "crypto/randomx/blake2/blake2-impl.h"
+#include "crypto/randomx/blake2/blake2.h"
 
 static void fill_block(__m256i* state, const block* ref_block,
 	block* next_block, int with_xor) {

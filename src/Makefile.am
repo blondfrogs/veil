@@ -458,7 +458,6 @@ crypto_libbitcoin_crypto_base_a_SOURCES = \
   crypto/randomx/allocator.cpp \
   crypto/randomx/allocator.hpp \
   crypto/randomx/argon2.h \
-  crypto/randomx/argon2_avx2.c \
   crypto/randomx/argon2_core.c \
   crypto/randomx/argon2_core.h \
   crypto/randomx/argon2_ref.c \
@@ -497,6 +496,7 @@ crypto_libbitcoin_crypto_base_a_SOURCES = \
   crypto/randomx/superscalar.cpp \
   crypto/randomx/superscalar.hpp \
   crypto/randomx/superscalar_program.hpp \
+  crypto/randomx/utility.hpp \
   crypto/randomx/virtual_machine.cpp \
   crypto/randomx/virtual_machine.hpp \
   crypto/randomx/virtual_memory.cpp \
@@ -512,11 +512,13 @@ crypto_libbitcoin_crypto_base_a_SOURCES = \
   crypto/randomx/blake2/blake2.h \
   crypto/randomx/blake2/blake2-impl.h \
   crypto/randomx/blake2/blake2b.c \
-  crypto/randomx/blake2/blamka-round-avx2.h \
   crypto/randomx/blake2/blamka-round-ref.h \
   crypto/randomx/blake2/blamka-round-ssse3.h \
   crypto/randomx/blake2/endian.h \
-  crypto/randomx/asm/configuration.asm
+  crypto/randomx/asm/configuration.asm \
+  crypto/c_threads.h \
+  crypto/hash-ops.h \
+  crypto/rx-slow-hash.c
 
 # these are the arm files that were removed from the make inorder to get the randomx libraries to compile
 #  crypto/randomx/jit_compiler_a64.cpp
@@ -577,7 +579,11 @@ crypto_libbitcoin_crypto_avx2_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 crypto_libbitcoin_crypto_avx2_a_CPPFLAGS = $(AM_CPPFLAGS)
 crypto_libbitcoin_crypto_avx2_a_CXXFLAGS += $(AVX2_CXXFLAGS)
 crypto_libbitcoin_crypto_avx2_a_CPPFLAGS += -DENABLE_AVX2
-crypto_libbitcoin_crypto_avx2_a_SOURCES = crypto/sha256_avx2.cpp
+crypto_libbitcoin_crypto_avx2_a_SOURCES = \
+  crypto/sha256_avx2.cpp \
+  crypto/randomx/blake2/blamka-round-avx2.h \
+  crypto/randomx/argon2_avx2.c
+
 
 crypto_libbitcoin_crypto_shani_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 crypto_libbitcoin_crypto_shani_a_CPPFLAGS = $(AM_CPPFLAGS)
@@ -799,6 +805,8 @@ CLEANFILES += *.gcda *.gcno
 CLEANFILES += compat/*.gcda compat/*.gcno
 CLEANFILES += consensus/*.gcda consensus/*.gcno
 CLEANFILES += crypto/*.gcda crypto/*.gcno
+CLEANFILES += crypto/randomx/*.gcda crypto/randomx/*.gcno
+CLEANFILES += crypto/randomx/blake2/*.gcda crypto/randomx/blake2/*.gcno
 CLEANFILES += policy/*.gcda policy/*.gcno
 CLEANFILES += primitives/*.gcda primitives/*.gcno
 CLEANFILES += script/*.gcda script/*.gcno

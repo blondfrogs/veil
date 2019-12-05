@@ -353,6 +353,13 @@ public:
         nDefaultRingSize = 11;
 
         nMaxHeaderRequestWithoutPoW = 50;
+
+
+        // TODO update timestamp with mainnet activation time
+        /** Timestamp when to switch to ProgPow, RandomX, Sha256D. UTC based **/
+        nPowUpdateTimestamp = 1608901200; // Fri Dec 25 2020 13:00:00
+        /// Used by block.h for serialization // TODO, update with mainnet activation time above
+        nPowTimeStampActive = 1608901200;
     }
 };
 
@@ -505,6 +512,12 @@ public:
         nDefaultRingSize = 11;
 
         nMaxHeaderRequestWithoutPoW = 50;
+
+        // TODO update timestamp with testnet activation time
+        /** Timestamp when to switch to ProgPow, RandomX, Sha256D. UTC based **/
+        nPowUpdateTimestamp = 1608901200; // Fri Dec 25 2020 13:00:00
+        /// Used by block.h for serialization // TODO, update with testnet activation time above
+        nPowTimeStampActive = 1608901200;
     }
 };
 
@@ -638,6 +651,11 @@ public:
         nDefaultRingSize = 11;
 
         nMaxHeaderRequestWithoutPoW = 50;
+
+        /** Timestamp when to switch to ProgPow, RandomX, Sha256D. UTC based **/
+        nPowUpdateTimestamp = 0; // On from that start
+        /// Used by block.h for serialization
+        nPowTimeStampActive = 0;
     }
 };
 

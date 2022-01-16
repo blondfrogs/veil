@@ -215,6 +215,8 @@ BITCOIN_CORE_H = \
   veil/ringct/temprecipient.h \
   veil/ringct/transactionrecord.h \
   veil/ringct/types.h \
+  veil/ringct/watchonlydb.h \
+  veil/ringct/watchonly.h \
   veil/zerocoin/accumulators.h \
   veil/zerocoin/accumulatormap.h \
   veil/zerocoin/denomination_functions.h \
@@ -306,6 +308,8 @@ libbitcoin_server_a_SOURCES = \
   veil/proofofstake/blockvalidation.cpp \
   veil/proofofstake/kernel.cpp \
   veil/proofofstake/stakeinput.cpp \
+  veil/ringct/watchonlydb.cpp \
+  veil/ringct/watchonly.cpp \
   veil/budget.cpp \
   versionbits.cpp \
   $(BITCOIN_CORE_H)

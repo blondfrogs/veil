@@ -208,6 +208,7 @@ BITCOIN_CORE_H = \
   veil/ringct/anonwallet.h \
   veil/ringct/anonwalletdb.h \
   veil/ringct/keyutil.h \
+  veil/ringct/lightwallet.h \
   veil/ringct/outputrecord.h \
   veil/ringct/rctindex.h \
   veil/ringct/rpcanonwallet.h \
@@ -362,6 +363,7 @@ libbitcoin_wallet_a_SOURCES = \
   veil/ringct/anonwallet.cpp \
   veil/ringct/outputrecord.cpp \
   veil/ringct/rpcanonwallet.cpp \
+  veil/ringct/lightwallet.cpp \
   $(BITCOIN_CORE_H)
 
 if TARGET_ARM64

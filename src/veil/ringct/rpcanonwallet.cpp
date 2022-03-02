@@ -2947,13 +2947,13 @@ static UniValue verifyrawtransaction(const JSONRPCRequest &request)
     return result;
 };
 
-
+// T
 static UniValue importstealthaddress(const JSONRPCRequest &request)
 {
     if (request.fHelp || request.params.size() < 2)
         throw std::runtime_error(
                 "importstealthaddress \"scan_secret\" \"spend_secret\" \"label\" num_prefix_bits \"prefix_num\" \"bech32\" \n"
-                "\nImport a stealth addresses. If spend_secret is valid privatekey it will be fully imported. If spend_secret is the spend pubkey it will be added as a watchonly address\n"
+                "\nImport a stealth addresses. If spend_secret is valid privatekey it will be fully imported.\n"
                 "\nArguments:\n"
                 "1. \"scan_secret\"                      (string, required) Scan secret key\n"
                 "2. \"spend_secret\"                     (string, required) Spend secret key or Spend Public Key (watchonly)\n"
@@ -3034,6 +3034,7 @@ static UniValue importstealthaddress(const JSONRPCRequest &request)
               throw JSONRPCError(RPC_INVALID_PARAMETER, "Could not decode spend secret as hex or base58.");
           }
       }
+
       if (vchSpendSecret.size() > 0) {
           if (vchSpendSecret.size() == 32) {
               skSpend.Set(&vchSpendSecret[0], true);
@@ -3046,8 +3047,8 @@ static UniValue importstealthaddress(const JSONRPCRequest &request)
           }
       }
 
-      if (!pkSpend.IsValid() && !skSpend.IsValid()) {
-          throw JSONRPCError(RPC_INVALID_PARAMETER, "Must provide the spend key or pubkey.");
+      if (!skSpend.IsValid()) {
+          throw JSONRPCError(RPC_INVALID_PARAMETER, "Must provide the spend key.");
       }
 
       if (skSpend == skScan) {
@@ -3283,7 +3284,6 @@ static UniValue importlightwalletaddress(const JSONRPCRequest &request)
     if (!anonwallet->ImportStealthAddress(sxAddr, skSpend)) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Could not save to wallet.");
     }
-
 
     if (!AddWatchOnlyAddress(sxAddr.ToString(fBech32), skScan, pkSpend, nCreated, nImported)) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Could not save light wallet address.");
